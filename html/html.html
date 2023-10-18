@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Western Crafting Menu</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <div class="menu-container">
+        <h1>Western Crafting Menu</h1>
+        <div id="recipe-pages">
+            <!-- Recipes will be added here dynamically -->
+        </div>
+        <div id="page-navigation">
+            <button class="btn-prev" id="prev-page" disabled>Previous Page</button>
+            <button class="btn-next" id="next-page" disabled>Next Page</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        // Event listener for craft button clicks
+        document.getElementById("recipe-pages").addEventListener("click", function(e) {
+            if (e.target && e.target.matches(".btn-craft:not(.disabled)")) {
+                const recipeIndex = e.target.getAttribute("data-recipe-index");
+                // Call your crafting function here with the selected recipe
+                console.log("Crafting recipe: ", recipes[recipeIndex]);
+            }
+        });
+
+        // Event listeners for page navigation button clicks
+        document.getElementById("prev-page").addEventListener("click", function() {
+            if (currentPage > 0) {
+                currentPage--;
+                renderRecipes();
+            }
+        });
+
+        document.getElementById("next-page").addEventListener("click", function() {
+            if (currentPage < numPages - 1) {
+                currentPage++;
+                renderRecipes();
+            }
+        });
+
+        // Call renderRecipes initially to display the first page
+        renderRecipes();
+    </script>
+    <script src="./JS/js.js"></script>
+</body>
+</html>

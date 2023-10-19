@@ -12,15 +12,15 @@ client_scripts {
 
 shared_scripts {
     'config.lua',
-
 }
 
-html_scripts {
+files {
     'html/html.html',
     'html/css/styles.css',
-    'html/js/js.js
-
+    'html/js/js.js'
 }
+
+ui_page 'html/html.html'
 
 server_scripts {
     'server/server.lua',

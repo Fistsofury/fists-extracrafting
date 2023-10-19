@@ -1,18 +1,18 @@
+-- config.lua
 Config = {}
 
 Config.recipes = {
-    -- Item, requirements, Category, Crafting Time
-    { item_name = "Bread", Ingredients = { wheat = 2, butter = 1 }, category = "Food", experience = 1, Xp = 0, craftingTime = 5 },
-    { item_name = "Bread", Ingredients = { wheat = 2, butter = 1 }, category = "Food", experience = 2, Xp = 10, craftingTime = 5 },
-    { item_name = "Water", Ingredients = { water_bucket = 2, butter = 1 }, category = "Drink", experience = 1, Xp = 0, craftingTime = 3 },
-    { item_name = "berry_juice", Ingredients = { water_bucket = 2, berries = 1 }, category = "Drink", experience = 2, Xp = 25, craftingTime = 3 },
+    -- Example structure:
+    -- { name = "ItemName", requiredItems = { {item = "ingredient", quantity = 2}, ... }, xpRequirement = 0, xpReward = 10, craftingTime = 5 },
+    { name = "Bread", requiredItems = { {item = "wheat", quantity = 2}, {item = "butter", quantity = 1} }, xpRequirement = 0, xpReward = 10, craftingTime = 5 },
+    { name = "Water", requiredItems = { {item = "water_bucket", quantity = 2}, {item = "butter", quantity = 1} }, xpRequirement = 0, xpReward = 0, craftingTime = 3 },
+    { name = "berry_juice", requiredItems = { {item = "water_bucket", quantity = 2}, {item = "berries", quantity = 1} }, xpRequirement = 10, xpReward = 25, craftingTime = 3 }
 }
 
--- Define additional categories or job-specific recipes if needed
 Config.Cooks = {
-    { item_name = "AdvancedBread", Ingredients = { wheat = 3, butter = 1, cheese = 1 }, category = "Food", experience = 3, Xp = 100, craftingTime = 7 },
+    { name = "AdvancedBread", requiredItems = { {item = "wheat", quantity = 3}, {item = "butter", quantity = 1}, {item = "cheese", quantity = 1} }, xpRequirement = 50, xpReward = 100, craftingTime = 7 }
 }
 
 Config.Doctors = {
-    { item_name = "AdvancedBread", Ingredients = { wheat = 3, butter = 1, cheese = 1 }, category = "Medicine", experience = 3, Xp = 100, craftingTime=7 },
+    { name = "AdvancedMedicine", requiredItems = { {item = "herb", quantity = 3}, {item = "water", quantity = 1} }, xpRequirement = 100, xpReward = 200, craftingTime = 10 }
 }

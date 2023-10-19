@@ -1,3 +1,10 @@
+VORPcore = {}
+TriggerEvent("getCore", function(core)
+    VORPcore = core
+end)
+
+VorpInv = exports.vorp_inventory:vorp_inventoryApi()
+
 -- Crafting function
 function CraftItem(source, item)
     local User = VorpCore.getUser(source)
@@ -66,5 +73,22 @@ RegisterServerEvent('getRecipes')
 AddEventHandler('getRecipes', function()
     local _source = source
     -- Send the recipes to the client
+    print("Sending recipes")
     TriggerClientEvent('receiveRecipes', _source, Config.recipes)
+
+end)
+
+RegisterNetEvent('getCraftingRecipes')
+AddEventHandler('getCraftingRecipes', function()
+    -- Fetch player's job (as an example; integrate with your job system)
+    local playerJob = getPlayerJob(source)  -- Assuming a function exists for this
+
+    local recipesToSend = Config.recipes
+    if playerJob == "Cook" then
+        recipesToSend = recipesToSend + Config.Cooks
+    elseif playerJob == "Doctor" then
+        recipesToSend = recipesToSend + Config.Doctors
+    end
+
+    TriggerClientEvent('receiveCraftingRecipes', source, recipesToSend)
 end)

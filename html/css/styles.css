@@ -1,41 +1,93 @@
 body {
-    background-color: #c2b280;
-    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    overflow: hidden;
 }
+
 .menu-container {
-    width: 80%;
-    margin: 0 auto;
+    position: relative;
     padding: 20px;
-    background-color: #8B4513;
-    border: 2px solid #000;
+    width: 500px;
+    height: 300px;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(to right, #c8a080, #f4e1d2, #c8a080); /* Book cover gradient */
+    border: 3px solid #8B4513;
+    font-family: 'Georgia', serif;
 }
+
+/* Spine of the book */
+.menu-container:before, .menu-container:after {
+    content: '';
+    position: absolute;
+    top: 10%;
+    width: 10px;
+    height: 80%;
+    background-color: #8B4513;
+    border-radius: 5px;
+}
+
+.menu-container:before {
+    left: -16px;
+}
+
+.menu-container:after {
+    right: -16px;
+}
+
 .page {
     display: none;
 }
+
 .recipe {
     border: 2px solid #000;
     margin: 10px;
     padding: 10px;
-    background-color: #fff;
+    background-color: #fefcf5; /* Page gradient */
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
-.btn-craft {
+
+.btn-craft, .btn-next, .btn-prev {
     background-color: #8B4513;
     color: #fff;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+    transition: 0.3s ease;
 }
-.btn-next, .btn-prev {
-    background-color: #8B4513;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
+
+.btn-craft:hover, .btn-next:hover, .btn-prev:hover {
+    background-color: #702d10;
 }
+
 .disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+/* Close button style */
+.close-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 25px;
+    height: 25px;
+    background-color: #8B4513;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s ease;
+}
+
+.close-button:hover {
+    background-color: #702d10;
 }

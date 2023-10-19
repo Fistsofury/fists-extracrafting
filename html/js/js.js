@@ -1,18 +1,30 @@
-// Sample data for recipes (replace with your actual data)
-let recipes = {};
+// js.js
+
+let recipes = [];
+let currentPage = 0;
+let numPages = 0;
 
 window.addEventListener('message', function(event) {
-    if (event.data.type === 'receiveRecipes') {
-        // Update the recipes with the data received from the server
-        recipes = event.data.recipes;
-        // Re-render the recipes to update the crafting menu
-        renderRecipes();
+    switch (event.data.type) {
+        case 'receiveRecipes':
+            recipes = event.data.recipes;
+            numPages = Math.ceil(recipes.length / 2);
+            currentPage = 0;
+            renderRecipes();
+            updatePageButtons();
+            break;
+
+        case 'setPlayerXP':
+            playerXP = event.data.xp;
+            renderRecipes();
+            break;
+
+        default:
+            console.log("Unhandled message type:", event.data.type);
+            break;
     }
 });
 
-let currentPage = 0;
-
-// Function to generate recipe HTML
 function generateRecipeHTML(recipe) {
     const canCraft = playerXP >= recipe.xpRequirement;
     const craftBtnClass = canCraft ? "btn-craft" : "btn-craft disabled";
@@ -31,7 +43,6 @@ function generateRecipeHTML(recipe) {
     `;
 }
 
-// Function to render recipes for the current page
 function renderRecipes() {
     const recipesContainer = document.getElementById("recipe-pages");
     recipesContainer.innerHTML = "";
@@ -42,35 +53,6 @@ function renderRecipes() {
     }
 }
 
-// Event listener for craft button clicks
-document.addEventListener("click", (event) => {
-    if (event.target.classList.contains("btn-craft")) {
-        const recipeIndex = event.target.getAttribute("data-recipe-index");
-        const recipe = getRecipe(recipes[recipeIndex].name);
-        // Send a message to your Lua script to initiate crafting
-        window.postMessage({ type: "craft", recipe: recipe.name }, "*");
-    }
-});
-
-// Event listener for next page button click
-document.getElementById("next-page").addEventListener("click", () => {
-    if (currentPage < numPages - 1) {
-        currentPage++;
-        renderRecipes();
-        updatePageButtons();
-    }
-});
-
-// Event listener for previous page button click
-document.getElementById("prev-page").addEventListener("click", () => {
-    if (currentPage > 0) {
-        currentPage--;
-        renderRecipes();
-        updatePageButtons();
-    }
-});
-
-// Function to update page navigation buttons
 function updatePageButtons() {
     const prevButton = document.getElementById("prev-page");
     const nextButton = document.getElementById("next-page");
@@ -79,46 +61,35 @@ function updatePageButtons() {
     nextButton.disabled = currentPage === numPages - 1;
 }
 
-// Simulate player XP (replace with your actual player XP retrieval logic)
-let playerXP = 60;
+document.getElementById("close-menu").addEventListener("click", function() {
+    window.postMessage({ type: "closeCraftingMenu" }, "*");
+});
 
-// Calculate the number of pages based on the total number of recipes
-const numPages = Math.ceil(recipes.length / 2);
-
-// Initial rendering
-renderRecipes();
-updatePageButtons();
-
-// Listen for messages from your Lua script
-window.addEventListener('message', function(event) {
-    if (event.data.type === 'setPlayerXP') {
-        // Update the player's XP
-        playerXP = event.data.xp;
-        // Re-render the recipes to update which ones can be crafted
-        renderRecipes();
+document.addEventListener("click", (event) => {
+    if (event.target.classList.contains("btn-craft")) {
+        const recipeIndex = event.target.getAttribute("data-recipe-index");
+        const recipe = recipes[recipeIndex];
+        window.postMessage({ type: "craft", recipe: recipe.name }, "*");
     }
 });
 
-// Function to get a recipe by item name
-function getRecipe(itemName) {
-    // Search for the recipe in the general recipes
-    for (let i = 0; i < recipes.length; i++) {
-        if (recipes[i].name === itemName) {
-            return recipes[i];
-        }
+document.getElementById("next-page").addEventListener("click", () => {
+    if (currentPage < numPages - 1) {
+        currentPage++;
+        renderRecipes();
+        updatePageButtons();
     }
+});
 
-    // If the recipe was not found in the general recipes, search for it in the job-specific recipes
-    // You'll need to replace "playerJob" with your actual logic for getting the player's job
-    const playerJobRecipes = Config.jobRecipes[playerJob];
-    if (playerJobRecipes) {
-        for (let i = 0; i < playerJobRecipes.length; i++) {
-            if (playerJobRecipes[i].name === itemName) {
-                return playerJobRecipes[i];
-            }
-        }
+document.getElementById("prev-page").addEventListener("click", () => {
+    if (currentPage > 0) {
+        currentPage--;
+        renderRecipes();
+        updatePageButtons();
     }
+});
 
-    // If the recipe was not found, return null
-    return null;
-}
+let playerXP = 60;
+
+// Request the recipes when the crafting menu opens:
+window.postMessage({ type: "requestCraftingRecipes" }, "*");

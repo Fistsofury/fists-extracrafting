@@ -9,10 +9,4 @@ Config.recipes = {
     { name = "berry_juice", requiredItems = { {item = "water_bucket", quantity = 2}, {item = "berries", quantity = 1} }, xpRequirement = 10, xpReward = 25, craftingTime = 3 }
 }
 
-Config.Cooks = {
-    { name = "AdvancedBread", requiredItems = { {item = "wheat", quantity = 3}, {item = "butter", quantity = 1}, {item = "cheese", quantity = 1} }, xpRequirement = 50, xpReward = 100, craftingTime = 7 }
-}
 
-Config.Doctors = {
-    { name = "AdvancedMedicine", requiredItems = { {item = "herb", quantity = 3}, {item = "water", quantity = 1} }, xpRequirement = 100, xpReward = 200, craftingTime = 10 }
-}

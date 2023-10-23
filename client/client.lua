@@ -7,22 +7,9 @@ end)
 -- Event handler for opening the crafting menu
 RegisterNetEvent('openCraftingMenu')
 AddEventHandler('openCraftingMenu', function()
-    -- Get the player's current coordinates
- --   local playerCoords = GetEntityCoords(PlayerPedId())
-
-    -- Get the coordinates of the nearest campfire
-   -- local campfire = VORP.Game.GetClosestObject("p_campfire01x", playerCoords.x, playerCoords.y, playerCoords.z)
-
-    -- Check if the player is near a campfire
-  --  if (campfire) then
-        -- Request the recipes from the server
         print("Triggering get recipes")  -- Debug print
         TriggerServerEvent('getRecipes')
         SetNuiFocus(true, true)
- --   else
-        -- Send a message to the player that they need to be near a campfire to craft
-  --      VORP.ShowNotification("You need to be near a campfire to craft!")
-
 end)
 
     

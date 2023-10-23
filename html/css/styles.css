@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    font-family:FrederickatheGreat-Regular;
     padding: 0;
     display: flex;
     justify-content: center;
@@ -10,18 +11,19 @@ body {
 }
 
 .menu-container {
+    background-image: url('../css/Partchment_bk.jpeg');
+    background-size: cover;
+    display: none;
     position: relative;
-    padding: 20px;
+    padding: 30px;
     width: 500px;
-    height: 300px;
+    height: 350px;
     border-radius: 5px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    background: linear-gradient(to right, #c8a080, #f4e1d2, #c8a080); /* Book cover gradient */
     border: 3px solid #8B4513;
     font-family: 'Georgia', serif;
 }
 
-/* Spine of the book */
 .menu-container:before, .menu-container:after {
     content: '';
     position: absolute;
@@ -48,8 +50,13 @@ body {
     border: 2px solid #000;
     margin: 10px;
     padding: 10px;
-    background-color: #fefcf5; /* Page gradient */
+    background-color: #fefcf5;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+.recipe:hover {
+    background-color: #fdfcf0;
 }
 
 .btn-craft, .btn-next, .btn-prev {
@@ -58,11 +65,12 @@ body {
     border: none;
     padding: 5px 10px;
     cursor: pointer;
-    transition: 0.3s ease;
+    transition: 0.3s ease, transform 0.2s;
 }
 
 .btn-craft:hover, .btn-next:hover, .btn-prev:hover {
     background-color: #702d10;
+    transform: translateY(-2px);
 }
 
 .disabled {
@@ -70,8 +78,7 @@ body {
     cursor: not-allowed;
 }
 
-/* Close button style */
-.close-button {
+#close-menu {
     position: absolute;
     right: 10px;
     top: 10px;
@@ -88,6 +95,20 @@ body {
     transition: 0.3s ease;
 }
 
-.close-button:hover {
+#close-menu:hover {
     background-color: #702d10;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.recipe p, .recipe li {
+    font-size: 14px;
 }

@@ -47,7 +47,6 @@ function CraftItem(source, item)
         
         Character.inventory:addItem(item, 1)
 
-        
 
         -- Add XP to the player's job category in the database...
 
@@ -69,26 +68,13 @@ AddEventHandler("vorp:craftItem", function(item)
 end)
 
 -- Event handler for getting recipes
-RegisterServerEvent('getRecipes')
+RegisterNetEvent('getRecipes')
 AddEventHandler('getRecipes', function()
     local _source = source
-    -- Send the recipes to the client
-    print("Sending recipes")
-    TriggerClientEvent('receiveRecipes', _source, Config.recipes)
-
-end)
-
-RegisterNetEvent('getCraftingRecipes')
-AddEventHandler('getCraftingRecipes', function()
     -- Fetch player's job (as an example; integrate with your job system)
     local playerJob = getPlayerJob(source)  -- Assuming a function exists for this
 
     local recipesToSend = Config.recipes
-    if playerJob == "Cook" then
-        recipesToSend = recipesToSend + Config.Cooks
-    elseif playerJob == "Doctor" then
-        recipesToSend = recipesToSend + Config.Doctors
-    end
 
     TriggerClientEvent('receiveCraftingRecipes', source, recipesToSend)
 end)

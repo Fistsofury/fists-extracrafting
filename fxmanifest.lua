@@ -7,21 +7,22 @@ version '1.0'
 author 'Fistsofury'
 
 client_scripts { 
-    'client/client.lua',
+    'client/client.lua'
 }
 
 shared_scripts {
-    'config.lua',
+    'config.lua'
 }
 
 files {
-    'html/html.html',
+    'html/index.html',
     'html/css/styles.css',
-    'html/js/js.js'
+    'html/js/app.js',
+    'html/css/Partchment_bk.jpeg'
 }
 
 ui_page 'html/html.html'
 
 server_scripts {
-    'server/server.lua',
+    'server/server.lua'
 }

@@ -18,10 +18,10 @@ files {
     'html/index.html',
     'html/css/styles.css',
     'html/js/app.js',
-    'html/css/Partchment_bk.jpeg'
+    'html/css/Partchment_bk.jpg'
 }
 
-ui_page 'html/html.html'
+ui_page 'html/index.html'
 
 server_scripts {
     'server/server.lua'

@@ -1,27 +1,41 @@
+@font-face {
+    font-family: 'FrederickatheGreat';
+    src: url('../css/fonts/FrederickatheGreat-Regular.ttf') format('truetype');
+  }
+
 body {
     margin: 0;
-    font-family:FrederickatheGreat-Regular;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.7);
+
     overflow: hidden;
 }
 
 .menu-container {
-    background-image: url('../css/Partchment_bk.jpeg');
+    background-image: url('../css/Partchment_bk.jpg');
     background-size: cover;
-    display: none;
     position: relative;
-    padding: 30px;
-    width: 500px;
-    height: 350px;
+    display: none;
+    box-sizing: border-box;
+    overflow: auto;
+    width: 90vw;
+    max-width: 575px;
+    height: 90vh;
+    max-height: 675px;
     border-radius: 5px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
     border: 3px solid #8B4513;
-    font-family: 'Georgia', serif;
+    overflow-x: hidden;
+    font-family: 'FrederickatheGreat','Georgia', serif;
+}
+
+@media (max-width: 600px) {
+    .menu-container {
+        padding: 20px;
+    }
 }
 
 .menu-container:before, .menu-container:after {
@@ -42,24 +56,25 @@ body {
     right: -16px;
 }
 
-.page {
-    display: none;
-}
+
 
 .recipe {
-    border: 2px solid #000;
+    border: 2px solid #936f3d;
     margin: 10px;
     padding: 10px;
-    background-color: #fefcf5;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    background-color: #fac89f;
+    box-shadow: inset 0 0 5px #987d4f;
     transition: background-color 0.3s ease;
+    transition: box-shadow 0.3s;
 }
 
 .recipe:hover {
-    background-color: #fdfcf0;
+    background-color: #f5ba92;
+    box-shadow: 0 4px 10px #391d0f;
 }
 
 .btn-craft, .btn-next, .btn-prev {
+    margin-left: 10px;
     background-color: #8B4513;
     color: #fff;
     border: none;
@@ -100,8 +115,10 @@ body {
 }
 
 h1 {
+    text-align: center;
     font-size: 28px;
     font-weight: bold;
+    font-family: 'FrederickatheGreat', 'Georgia', serif;
 }
 
 h2 {

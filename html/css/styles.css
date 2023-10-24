@@ -32,6 +32,8 @@ body {
     font-family: 'FrederickatheGreat','Georgia', serif;
 }
 
+
+
 @media (max-width: 600px) {
     .menu-container {
         padding: 20px;
@@ -108,11 +110,14 @@ body {
     cursor: pointer;
     border: none;
     transition: 0.3s ease;
-}
-
-#close-menu:hover {
+    font-size: 20px; /
+  }
+  
+  #close-menu:hover {
     background-color: #702d10;
-}
+
+  }
+  
 
 h1 {
     text-align: center;

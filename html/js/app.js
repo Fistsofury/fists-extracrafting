@@ -1,7 +1,3 @@
-// js.js
-function showMenu() {
-    document.querySelector(".menu-container").style.display = "block";
-}
 class CraftingMenu {
     constructor() {
         this.recipes = [];
@@ -10,7 +6,10 @@ class CraftingMenu {
         this.playerXP = 60;
 
         this.initializeEventListeners();
-        this.requestCraftingRecipes();
+    }
+
+    showMenu() {
+        document.querySelector(".menu-container").style.display = "block";
     }
 
     initializeEventListeners() {
@@ -21,6 +20,11 @@ class CraftingMenu {
         document.getElementById("recipe-pages").addEventListener("click", this.handleCraftClick.bind(this));
         document.getElementById("next-page").addEventListener("click", this.handleNextPage.bind(this));
         document.getElementById("prev-page").addEventListener("click", this.handlePrevPage.bind(this));
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'showMenu') {
+                this.showMenu();
+            }
+        });
     }
 
     handleMessageEvent(event) {
@@ -32,28 +36,41 @@ class CraftingMenu {
                 this.renderRecipes();
                 this.updatePageButtons();
                 break;
-    
+
             case 'setPlayerXP':
                 this.playerXP = event.data.xp;
                 this.renderRecipes();
                 break;
-    
+
             case 'closeCraftingMenu':
-                // Add your code here to handle the closeCraftingMenu event
+                document.querySelector(".menu-container").style.display = "none";
                 break;
-    
+            case 'showMenu':
+                this.showMenu();
+                break;
+            case 'craft':
+                this.handleCraft(event.data.recipe);
+                break;
+                
             default:
                 console.log("Unhandled message type:", event.data.type);
                 break;
         }
     }
-    
 
     handleCraftClick(event) {
         if (event.target.classList.contains("btn-craft")) {
             const recipeIndex = event.target.getAttribute("data-recipe-index");
             const recipe = this.recipes[recipeIndex];
-            window.postMessage({ type: "craft", recipe: recipe.name }, "*");
+            fetch(`https://${GetParentResourceName()}/craft`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: JSON.stringify({
+        recipe: recipe.name
+    })
+});
         }
     }
 
@@ -101,8 +118,6 @@ class CraftingMenu {
         }
     }
 
-    
-
     updatePageButtons() {
         const prevButton = document.getElementById("prev-page");
         const nextButton = document.getElementById("next-page");
@@ -110,11 +125,6 @@ class CraftingMenu {
         prevButton.disabled = this.currentPage === 0;
         nextButton.disabled = this.currentPage === this.numPages - 1;
     }
-
-    requestCraftingRecipes() {
-        window.postMessage({ type: "requestCraftingRecipes" }, "*");
-    }
 }
 
-// Instantiate the CraftingMenu class
 const craftingMenu = new CraftingMenu();

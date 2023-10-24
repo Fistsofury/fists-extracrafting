@@ -3,46 +3,47 @@ TriggerEvent("getCore", function(core)
     VORPcore = core
 end)
 
-
--- Event handler for opening the crafting menu
 RegisterNetEvent('openCraftingMenu')
 AddEventHandler('openCraftingMenu', function()
-        print("Triggering get recipes")  -- Debug print
-        TriggerServerEvent('getRecipes')
-        SetNuiFocus(true, true)
+
+    print("Triggering get recipes")  -- Debug print
+    TriggerServerEvent('getRecipes')
+    SetNuiFocus(true, true)
+    SendNUIMessage({type = 'showMenu'})
+
 end)
 
-    
-
-
--- Event handler for crafting an item
 RegisterNetEvent('craftItem')
 AddEventHandler('craftItem', function(item)
-    -- Trigger the server event to craft the item
     TriggerServerEvent('vorp:craftItem', item)
-
-    -- Get the recipe from the config file
+    print("Item Set:", item)
     local recipe = Config.recipes[item]
-
-    -- Check if the recipe exists
     if not recipe then
         VORP.ShowNotification("This recipe doesn't exist!")
         return
     end
-
-    -- Show a notification to the player that crafting has started
     VORP.ShowNotification("Crafting " .. item .. "...")
-
-    -- Wait for the crafting time to elapse
-    Citizen.Wait(recipe.craftingTime * 1000)
-
-    -- Show a notification to the player that crafting has finished
+    Citizen.Wait(recipe.craftingTime * 1000) -- times 1000 to get seconds
     VORP.ShowNotification("Finished crafting " .. item .. "!")
+end)
+
+
+RegisterNetEvent('crafting:startCraftingAnimation')
+AddEventHandler('crafting:startCraftingAnimation', function()
+    TaskStartScenarioInPlace(PlayerPedId(), 'WORLD_HUMAN_CROUCH_INSPECT', 0, true)
+    Citizen.Wait(Config.craftingTime * 1000)
+    ClearPedTasks(PlayerPedId())
+end)
+
+RegisterNUICallback("craft", function(data, cb)
+    TriggerServerEvent("vorp:craftItem", data.recipe)
+    cb('ok')
 end)
 
 RegisterNetEvent('receiveRecipes')
 AddEventHandler('receiveRecipes', function(data)
-    -- Send the received recipes data to the NUI/HTML interface
+
+    print("receiveRecipes triggered")  --  print
     SendNUIMessage({
         type = 'receiveRecipes',
         recipes = data
@@ -54,8 +55,7 @@ RegisterNUICallback('closeCraftingMenu', function()
 end)
 
 
-RegisterCommand('fists', function(source, args)
-    -- Trigger the event to open the crafting menu
+RegisterCommand('fists', function(source, args)  -- Temp command for testing, will change to prop at some point
     TriggerEvent('openCraftingMenu')
 end, false)
 

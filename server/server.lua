@@ -3,34 +3,28 @@ TriggerEvent("getCore", function(core)
     VORPcore = core
 end)
 
-VorpInv = exports.vorp_inventory:vorp_inventoryApi()
+VorpInv = exports.vorp_inventory:vorp_inventoryApi() --still needed?
 
--- Crafting function
 function CraftItem(source, item)
     local User = VorpCore.getUser(source)
     local Character = User.getUsedCharacter
 
-    -- Check if the player has a job-specific recipe or use a general recipe
     local recipe = Config.recipes[item]
 
-    -- Check if the recipe exists
     if not recipe then
         TriggerClientEvent("vorp:TipRight", source, "This recipe doesn't exist.", 5000)
         return
     end
 
-    -- Check if the player has enough XP and the necessary ingredients in their inventory...
     
-    exports.oxmysql:fetch('SELECT xp FROM crafting_xp WHERE charidentifier = ? AND category = ?', {User.identifier, recipe.category}, function(result)
+    
+    exports.oxmysql:fetch('SELECT xp FROM crafting_xp WHERE charidentifier = ? AND category = ?', {User.identifier, recipe.category}, function(result) -- xp check, not being used yet
         if #result == 0 then
-            -- Player does not exist in the table, create them with an XP value of 0
-            exports.oxmysql:execute('INSERT INTO crafting_xp (charidentifier, category, xp) VALUES (?, ?, 0)', {User.identifier, recipe.category})
+            exports.oxmysql:execute('INSERT INTO crafting_xp (charidentifier, category, xp) VALUES (?, ?, 0)', {User.identifier, recipe.category})--  player not exist then create in table?
         elseif result[1].xp < recipe.xpRequired then
             TriggerClientEvent("vorp:TipRight", source, "You don't have enough XP to craft this item.", 5000)
             return
         end
-
-        -- player has the necessary ingredients
         
         for ingredient, quantity in pairs(recipe.ingredients) do
             if not Character.inventory:canCarryItem(ingredient, quantity) then
@@ -39,7 +33,6 @@ function CraftItem(source, item)
             end
         end
 
-        -- remove ingredients from the player's inventory and add the crafted item
 
         for ingredient, quantity in pairs(recipe.ingredients) do
             Character.inventory:subItem(ingredient, quantity)
@@ -48,17 +41,13 @@ function CraftItem(source, item)
         Character.inventory:addItem(item, 1)
 
 
-        -- Add XP to the player's job category in the database...
+        exports.oxmysql:execute('UPDATE crafting_xp SET xp = xp + ? WHERE charidentifier = ? AND category = ?', {recipe.xp, User.identifier, recipe.category}) -- XP stuff still in testing
 
-        exports.oxmysql:execute('UPDATE crafting_xp SET xp = xp + ? WHERE charidentifier = ? AND category = ?', {recipe.xp, User.identifier, recipe.category})
-
-        -- Send a success message to the player...
 
         TriggerClientEvent("vorp:TipRight", source, "You have crafted a " .. item .. ".", 5000)
     end)
 end
 
--- Event handler for crafting items...
 
 RegisterServerEvent("vorp:craftItem")
 AddEventHandler("vorp:craftItem", function(item)
@@ -67,14 +56,22 @@ AddEventHandler("vorp:craftItem", function(item)
     CraftItem(_source, item)
 end)
 
--- Event handler for getting recipes
 RegisterNetEvent('getRecipes')
 AddEventHandler('getRecipes', function()
+    print(" get recipes triggered")  --  print
     local _source = source
-    -- Fetch player's job (as an example; integrate with your job system)
-    local playerJob = getPlayerJob(source)  -- Assuming a function exists for this
-
     local recipesToSend = Config.recipes
 
-    TriggerClientEvent('receiveCraftingRecipes', source, recipesToSend)
+    TriggerClientEvent('receiveRecipes', source, recipesToSend)
+end)
+
+RegisterNetEvent('openCraftingMenu2') -- Categories in test
+AddEventHandler('openCraftingMenu2', function()
+    local categories = {}
+    for _, recipe in ipairs(Config.recipes) do
+        if not categories[recipe.category] then
+            categories[recipe.category] = true
+        end
+    end
+    TriggerClientEvent('receiveCategories', source, categories)
 end)

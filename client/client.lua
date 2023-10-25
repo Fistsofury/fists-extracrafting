@@ -3,59 +3,48 @@ TriggerEvent("getCore", function(core)
     VORPcore = core
 end)
 
-RegisterNetEvent('openCraftingMenu')
-AddEventHandler('openCraftingMenu', function()
+RegisterNetEvent('fists_crafting:openCraftingMenu')
+AddEventHandler('fists_crafting:openCraftingMenu', function()
 
     print("Triggering get recipes")  -- Debug print
-    TriggerServerEvent('getRecipes')
+    TriggerServerEvent('fists_crafting:getRecipes')
     SetNuiFocus(true, true)
-    SendNUIMessage({type = 'showMenu'})
+    SendNUIMessage({type = 'fists_crafting:showMenu'})
 
 end)
 
-RegisterNetEvent('craftItem')
-AddEventHandler('craftItem', function(item)
-    TriggerServerEvent('vorp:craftItem', item)
-    print("Item Set:", item)
-    local recipe = Config.recipes[item]
-    if not recipe then
-        VORP.ShowNotification("This recipe doesn't exist!")
-        return
-    end
-    VORP.ShowNotification("Crafting " .. item .. "...")
-    Citizen.Wait(recipe.craftingTime * 1000) -- times 1000 to get seconds
-    VORP.ShowNotification("Finished crafting " .. item .. "!")
-end)
 
-
-RegisterNetEvent('crafting:startCraftingAnimation')
-AddEventHandler('crafting:startCraftingAnimation', function()
-    TaskStartScenarioInPlace(PlayerPedId(), 'WORLD_HUMAN_CROUCH_INSPECT', 0, true)
-    Citizen.Wait(Config.craftingTime * 1000)
-    ClearPedTasks(PlayerPedId())
-end)
-
-RegisterNUICallback("craft", function(data, cb)
-    TriggerServerEvent("vorp:craftItem", data.recipe)
+RegisterNUICallback("fists_crafting:craft", function(data, cb)
+    TriggerServerEvent("fists_crafting:craftItem1", data.recipe)
+    print("Craft button clicked")
     cb('ok')
 end)
 
-RegisterNetEvent('receiveRecipes')
-AddEventHandler('receiveRecipes', function(data)
+RegisterNetEvent('fists_crafting:playCraftingAnimation')
+AddEventHandler('fists_crafting:playCraftingAnimation', function(duration)
+    local playerPed = PlayerPedId()
+    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_CROUCH_INSPECT", 0, true)
+    Citizen.Wait(duration * 1000)
+    ClearPedTasks(playerPed)
+end)
+
+
+RegisterNetEvent('fists_crafting:receiveRecipes')
+AddEventHandler('fists_crafting:receiveRecipes', function(data)
 
     print("receiveRecipes triggered")  --  print
     SendNUIMessage({
-        type = 'receiveRecipes',
+        type = 'fists_crafting:receiveRecipes',
         recipes = data
     })
 end)
 
-RegisterNUICallback('closeCraftingMenu', function()
-    SetNuiFocus(false, false)  -- Removes focus from NUI
+RegisterNUICallback('fists_crafting:closeCraftingMenu', function(data, cb)
+    SetNuiFocus(false, false)
+    cb('ok')
 end)
 
 
 RegisterCommand('fists', function(source, args)  -- Temp command for testing, will change to prop at some point
-    TriggerEvent('openCraftingMenu')
+    TriggerEvent('fists_crafting:openCraftingMenu')
 end, false)
-

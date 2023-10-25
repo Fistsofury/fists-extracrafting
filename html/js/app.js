@@ -12,57 +12,68 @@ class CraftingMenu {
         document.querySelector(".menu-container").style.display = "block";
     }
 
+    hideMenu() {
+        document.querySelector(".menu-container").style.display = "none";
+    }
+
     initializeEventListeners() {
         window.addEventListener('message', this.handleMessageEvent.bind(this));
         document.getElementById("close-menu").addEventListener("click", () => {
-            window.postMessage({ type: "closeCraftingMenu" }, "*");
+            this.hideMenu();
+            fetch(`https://${GetParentResourceName()}/fists_crafting:closeCraftingMenu`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: JSON.stringify({})
+            });
         });
+    
         document.getElementById("recipe-pages").addEventListener("click", this.handleCraftClick.bind(this));
         document.getElementById("next-page").addEventListener("click", this.handleNextPage.bind(this));
         document.getElementById("prev-page").addEventListener("click", this.handlePrevPage.bind(this));
-        window.addEventListener('message', (event) => {
-            if (event.data.type === 'showMenu') {
-                this.showMenu();
-            }
-        });
     }
+    
 
     handleMessageEvent(event) {
         switch (event.data.type) {
-            case 'receiveRecipes':
+            case 'fists_crafting:receiveRecipes':
                 this.recipes = event.data.recipes;
                 this.numPages = Math.ceil(this.recipes.length / 2);
                 this.currentPage = 0;
                 this.renderRecipes();
                 this.updatePageButtons();
                 break;
-
-            case 'setPlayerXP':
+    
+            case 'fists_crafting:setPlayerXP':
                 this.playerXP = event.data.xp;
                 this.renderRecipes();
                 break;
-
-            case 'closeCraftingMenu':
-                document.querySelector(".menu-container").style.display = "none";
+    
+            case 'fists_crafting:closeCraftingMenu':
+                this.hideMenu();
                 break;
-            case 'showMenu':
+    
+            case 'fists_crafting:showMenu':
                 this.showMenu();
                 break;
-            case 'craft':
+    
+            case 'fists_crafting:craft':
                 this.handleCraft(event.data.recipe);
                 break;
-                
+    
             default:
                 console.log("Unhandled message type:", event.data.type);
                 break;
         }
     }
+    
 
     handleCraftClick(event) {
         if (event.target.classList.contains("btn-craft")) {
             const recipeIndex = event.target.getAttribute("data-recipe-index");
             const recipe = this.recipes[recipeIndex];
-            fetch(`https://${GetParentResourceName()}/craft`, {
+            fetch(`https://${GetParentResourceName()}/fists_crafting:craft`, {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json; charset=UTF-8',

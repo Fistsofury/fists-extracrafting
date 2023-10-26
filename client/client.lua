@@ -6,7 +6,7 @@ end)
 RegisterNetEvent('fists_crafting:openCraftingMenu')
 AddEventHandler('fists_crafting:openCraftingMenu', function()
 
-    print("Triggering get recipes")  -- Debug print
+    --print("Triggering get recipes")  -- Debug print
     TriggerServerEvent('fists_crafting:getRecipes')
     SetNuiFocus(true, true)
     SendNUIMessage({type = 'fists_crafting:showMenu'})
@@ -16,7 +16,7 @@ end)
 
 RegisterNUICallback("fists_crafting:craft", function(data, cb)
     TriggerServerEvent("fists_crafting:craftItem1", data.recipe)
-    print("Craft button clicked")
+    --print("Craft button clicked")
     cb('ok')
 end)
 
@@ -32,7 +32,7 @@ end)
 RegisterNetEvent('fists_crafting:receiveRecipes')
 AddEventHandler('fists_crafting:receiveRecipes', function(data)
 
-    print("receiveRecipes triggered")  --  print
+    --print("receiveRecipes triggered")  --  print
     SendNUIMessage({
         type = 'fists_crafting:receiveRecipes',
         recipes = data
@@ -48,3 +48,4 @@ end)
 RegisterCommand('fists', function(source, args)  -- Temp command for testing, will change to prop at some point
     TriggerEvent('fists_crafting:openCraftingMenu')
 end, false)
+

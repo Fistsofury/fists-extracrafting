@@ -2,7 +2,23 @@
 Config = {}
 
 Config.recipes = {
-    { name = "consumable_breakfast", category = "Food", requiredItems = { {item = "meat", quantity = 2}, {item = "salt", quantity = 1} }, xpRequirement = 10, xpReward = 0, craftingTime = 5 },
-    { name = "Water", category = "Drink", requiredItems = { {item = "water_bucket", quantity = 2}, {item = "butter", quantity = 1} }, xpRequirement = 0, xpReward = 0, craftingTime = 3 },
-    { name = "berry_juice", category = "Drink", requiredItems = { {item = "water_bucket", quantity = 2}, {item = "berries", quantity = 1} }, xpRequirement = 10, xpReward = 25, craftingTime = 3 }
+    --Food
+    { 
+        { 
+            name = "consumable_breakfast", -- db item name
+            label = "Breakfast",  --Label that you want to appear on the menu
+            category = "Food",  --what Category, changable to whatever you want
+            requiredItems = { 
+                {item = "meat", label = "Meat", quantity = 2},  
+                {item = "salt", label = "Salt", quantity = 1} 
+                }, 
+            xpRequirement = 10, --Amount of xp needed to craft
+            xpReward = 0, --Amount of xp awarded for a succesful craft
+            craftingTime = 5 -- time in seconds it takes to craft
+        },
+
+        --add more recipes here
+    },
 }
+
+

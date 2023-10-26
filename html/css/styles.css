@@ -66,8 +66,7 @@ body {
     padding: 10px;
     background-color: #fac89f;
     box-shadow: inset 0 0 5px #987d4f;
-    transition: background-color 0.3s ease;
-    transition: box-shadow 0.3s;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .recipe:hover {
@@ -110,7 +109,7 @@ body {
     cursor: pointer;
     border: none;
     transition: 0.3s ease;
-    font-size: 20px; /
+    font-size: 20px;
   }
   
   #close-menu:hover {
@@ -133,4 +132,25 @@ h2 {
 
 .recipe p, .recipe li {
     font-size: 14px;
+}
+
+.loading-bar {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    margin-top: 10px;
+    position: relative;
+    height: 20px;
+    display: none;
+}
+
+.loading-progress {
+    height: 100%;
+    background-color: #000000;
+    border-radius: 5px;
+    width: 0%;
+    transition: width 0.1s ease-in-out;
+}
+  .hidden {
+    display: none;
 }

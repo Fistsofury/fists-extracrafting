@@ -73,17 +73,51 @@ class CraftingMenu {
         if (event.target.classList.contains("btn-craft")) {
             const recipeIndex = event.target.getAttribute("data-recipe-index");
             const recipe = this.recipes[recipeIndex];
+    
+            // Start crafting animation
+            const recipeElement = event.target.closest('.recipe');
+            const loadingBar = recipeElement.querySelector('.loading-bar');
+            const loadingProgress = recipeElement.querySelector('.loading-progress');
+    
+            // Show the loading bar
+            loadingBar.style.display = 'block';
+    
+            // Reset loading bar in case it's been used before
+            loadingProgress.style.width = '0%';
+    
+            // Example crafting time in seconds
+            const craftingTime = recipe.craftingTime; // Use the crafting time from the recipe
+            const interval = 10; // Update every 10 milliseconds
+            const increment = (interval / (craftingTime * 1000)) * 100; // Calculate the increment for each update
+    
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += increment;
+                loadingProgress.style.width = `${progress}%`;
+    
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    // Hide the loading bar when crafting is complete
+                    loadingBar.style.display = 'none';
+                    // Add any additional actions to take when crafting is complete
+                }
+            }, interval);
+    
+            // Send craft request to server
             fetch(`https://${GetParentResourceName()}/fists_crafting:craft`, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: JSON.stringify({
-        recipe: recipe.name
-    })
-});
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: JSON.stringify({
+                    recipe: recipe.name
+                })
+            });
         }
     }
+    
+    
+    
 
     handleNextPage() {
         if (this.currentPage < this.numPages - 1) {
@@ -106,18 +140,25 @@ class CraftingMenu {
         const craftBtnClass = canCraft ? "btn-craft" : "btn-craft disabled";
         return `
             <div class="recipe">
-                <h2>${recipe.name}</h2>
+                <h2>${recipe.label}</h2>
                 <ul>
                     <li>Required Items:</li>
-                    ${recipe.requiredItems.map(item => `<li>${item.quantity}x ${item.item}</li>`).join('')}
+                    ${recipe.requiredItems.map(item => `<li>${item.quantity}x ${item.label}</li>`).join('')}
                 </ul>
                 <p>XP Requirement: ${recipe.xpRequirement}</p>
                 <p>Crafting XP Reward: ${recipe.xpReward}</p>
                 <p>Crafting Time: ${recipe.craftingTime} seconds</p>
                 <button class="${craftBtnClass}" data-recipe-index="${this.recipes.indexOf(recipe)}">Craft</button>
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
             </div>
         `;
     }
+    
+    
+    
+    
 
     renderRecipes() {
         const recipesContainer = document.getElementById("recipe-pages");

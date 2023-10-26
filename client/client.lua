@@ -3,6 +3,7 @@ TriggerEvent("getCore", function(core)
     VORPcore = core
 end)
 
+
 RegisterNetEvent('fists_crafting:openCraftingMenu')
 AddEventHandler('fists_crafting:openCraftingMenu', function()
 

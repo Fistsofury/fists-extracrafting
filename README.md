@@ -23,6 +23,15 @@ fists-extracrafting
 # XP based crafting script
 - XP is based on Category example if you craft breakfast you will only earn xp in the Food Category, and XP earnt & XP required can be configured in the config.
 
+# Helpful notes
+- Change Index.html Nerve Crafting Menu to whatever you want
+- uncomment --[[RegisterCommand('fists', function(source, args)  -- Temp command for testing, will change to prop at some point
+    TriggerEvent('fists_crafting:openCraftingMenu')
+end, false)]] and use /fists or whatever you change it to use a command instead
+- Enable all debugs if you want support
+- Change p_campfire05x to whatever prop you want to use on line 12 of the client.lua
+
+
 # Still to do
 - sort by categories or something along those lines
 - check xp / items before playing loading /crafting bar

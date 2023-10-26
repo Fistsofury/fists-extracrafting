@@ -4,6 +4,32 @@ TriggerEvent("getCore", function(core)
 end)
 
 
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(0)
+        
+        local playerPed = PlayerPedId()
+        local campfire = GetClosestObjectOfType(GetEntityCoords(playerPed), 1.0, GetHashKey("p_campfire05x"), false, false, false)
+        
+        if campfire ~= 0 then
+            if Citizen.InvokeNative(0x83CDB10EA29B370B, campfire) then  
+                SetTextScale(0.35, 0.35)
+                SetTextColor(255, 255, 255, 255) -- You can change the text color here
+                SetTextCentre(true)
+                SetTextDropshadow(1, 0, 0, 0, 200) -- You can change the text shadow color here
+                SetTextFontForCurrentCommand(6) 
+                DisplayText(CreateVarString(10, 'LITERAL_STRING', 'Press G to open crafting menu'), 0.5, 0.8)
+
+                if IsControlJustPressed(0, 0x760A9C6F) then  
+                    TriggerEvent('fists_crafting:openCraftingMenu')
+                end
+            end
+        end
+    end
+end)
+
+
+
 RegisterNetEvent('fists_crafting:openCraftingMenu')
 AddEventHandler('fists_crafting:openCraftingMenu', function()
 
@@ -46,7 +72,7 @@ RegisterNUICallback('fists_crafting:closeCraftingMenu', function(data, cb)
 end)
 
 
-RegisterCommand('fists', function(source, args)  -- Temp command for testing, will change to prop at some point
+--[[RegisterCommand('fists', function(source, args)  -- Temp command for testing, will change to prop at some point
     TriggerEvent('fists_crafting:openCraftingMenu')
-end, false)
+end, false)]]
 

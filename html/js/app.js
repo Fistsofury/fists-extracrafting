@@ -18,6 +18,7 @@ class CraftingMenu {
 
     initializeEventListeners() {
         window.addEventListener('message', this.handleMessageEvent.bind(this));
+        
         document.getElementById("close-menu").addEventListener("click", () => {
             this.hideMenu();
             fetch(`https://${GetParentResourceName()}/fists_crafting:closeCraftingMenu`, {
@@ -28,12 +29,18 @@ class CraftingMenu {
                 body: JSON.stringify({})
             });
         });
-    
+
         document.getElementById("recipe-pages").addEventListener("click", this.handleCraftClick.bind(this));
         document.getElementById("next-page").addEventListener("click", this.handleNextPage.bind(this));
         document.getElementById("prev-page").addEventListener("click", this.handlePrevPage.bind(this));
+        document.getElementById("search-bar").addEventListener("input", this.handleSearch.bind(this));
     }
-    
+
+    handleSearch(event) {
+        const searchTerm = event.target.value.toLowerCase();
+        this.renderRecipes(searchTerm);
+    }
+
 
     handleMessageEvent(event) {
         switch (event.data.type) {
@@ -160,12 +167,19 @@ class CraftingMenu {
     
     
 
-    renderRecipes() {
+    renderRecipes(searchTerm = "") {
         const recipesContainer = document.getElementById("recipe-pages");
         recipesContainer.innerHTML = "";
 
-        for (let i = this.currentPage * 2; i < Math.min((this.currentPage + 1) * 2, this.recipes.length); i++) {
-            const recipe = this.recipes[i];
+        const filteredRecipes = this.recipes.filter(recipe => 
+            recipe.label.toLowerCase().includes(searchTerm)
+        );
+
+        this.numPages = Math.ceil(filteredRecipes.length / 2);
+        this.updatePageButtons();
+
+        for (let i = this.currentPage * 2; i < Math.min((this.currentPage + 1) * 2, filteredRecipes.length); i++) {
+            const recipe = filteredRecipes[i];
             recipesContainer.innerHTML += this.generateRecipeHTML(recipe);
         }
     }
@@ -175,7 +189,7 @@ class CraftingMenu {
         const nextButton = document.getElementById("next-page");
 
         prevButton.disabled = this.currentPage === 0;
-        nextButton.disabled = this.currentPage === this.numPages - 1;
+        nextButton.disabled = this.currentPage >= this.numPages - 1;
     }
 }
 
